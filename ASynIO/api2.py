@@ -16,7 +16,7 @@ async def main():
     async with aiohttp.ClientSession() as session:
         url = 'https://datausa.io/api/data?drilldowns=Nation&measures=Population'
         tasks = []
-        for number in range(500):
+        for number in range(100):
             tasks.append(asyncio.ensure_future(get_data(session, url)))
 
         data = await asyncio.gather(*tasks)

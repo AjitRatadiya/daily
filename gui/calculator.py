@@ -1,8 +1,9 @@
 import sys
-
-from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QPushButton, QGraphicsColorizeEffect
-from PyQt5.QtCore import Qt
+from PyQt5 import QtCore
+from PyQt5.QtGui import QFont, QRegExpValidator
+from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QPushButton, QGraphicsColorizeEffect, QLineEdit, \
+    QMessageBox
+from PyQt5.QtCore import Qt, QRegExp
 
 
 class MainScreen(QMainWindow):
@@ -12,6 +13,8 @@ class MainScreen(QMainWindow):
         self.setWindowTitle("Calculator")
         self.setGeometry(100, 100, 360, 350)
         self.setFont(QFont('ariel', 15))
+        # self.numbervalidator = QRegExpValidator(QRegExp(r'^[0-9]+$'))
+        # self.namevalidator = QRegExpValidator(QRegExp(r'^[a-zA-Z]+$'))
 
         self.uicomponents()
         self.show()
@@ -20,13 +23,14 @@ class MainScreen(QMainWindow):
 
         self.label = QLabel(self)
         self.label.setGeometry(5, 5, 350, 70)
-        self.label.setWordWrap(True)
+        # self.label.setWordWrap(True)
         self.label.setStyleSheet("QLabel"
                                  "{"
-                                 "border : 4px solid black;"
+                                 "border : 4px solid grey;"
                                  "background : white;"
                                  "}")
         self.label.setAlignment(Qt.AlignRight)
+        # self.label.setReadOnly(True)
 
         self.init("push1", self.action1, "1", 5, 150, 80, 40)
         self.init("push2", self.action2, "2", 95, 150, 80, 40)
@@ -52,12 +56,77 @@ class MainScreen(QMainWindow):
     def init(self, btnname, actname, val, xval, yval, hval, wval):
         btnname = QPushButton(val, self)
         btnname.setGeometry(xval, yval, hval, wval)
-
-        if btnname == "push_equal":
-            c_effect = QGraphicsColorizeEffect()
-            c_effect.setColor(Qt.blue)
-            btnname.setGraphicsEffect(c_effect)
+        # btnname.setAutoRepeat(False)
         btnname.clicked.connect(actname)
+
+
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_1:
+            text = self.label.text()
+            self.label.setText(text + "1")
+        elif event.key() == QtCore.Qt.Key_2:
+            text = self.label.text()
+            self.label.setText(text + "2")
+        elif event.key() == QtCore.Qt.Key_3:
+            text = self.label.text()
+            self.label.setText(text + "3")
+        elif event.key() == QtCore.Qt.Key_4:
+            text = self.label.text()
+            self.label.setText(text + "4")
+        elif event.key() == QtCore.Qt.Key_5:
+            text = self.label.text()
+            self.label.setText(text + "5")
+        elif event.key() == QtCore.Qt.Key_6:
+            text = self.label.text()
+            self.label.setText(text + "6")
+        elif event.key() == QtCore.Qt.Key_7:
+            text = self.label.text()
+            self.label.setText(text + "7")
+        elif event.key() == QtCore.Qt.Key_8:
+            text = self.label.text()
+            self.label.setText(text + "8")
+        elif event.key() == QtCore.Qt.Key_9:
+            text = self.label.text()
+            self.label.setText(text + "9")
+        elif event.key() == QtCore.Qt.Key_0:
+            text = self.label.text()
+            self.label.setText(text + "0")
+        elif event.key() == QtCore.Qt.Key_Plus:
+            text = self.label.text()
+            self.label.setText(text + "+")
+        elif event.key() == QtCore.Qt.Key_Minus:
+            text = self.label.text()
+            self.label.setText(text + "-")
+        elif event.key() == QtCore.Qt.Key_multiply:
+            text = self.label.text()
+            self.label.setText(text + "*")
+        elif event.key() == QtCore.Qt.Key_division:
+            text = self.label.text()
+            self.label.setText(text + "/")
+        elif event.key() == QtCore.Qt.Key_Period:
+            text = self.label.text()
+            self.label.setText(text + ".")
+        elif event.key() == QtCore.Qt.Key_Backspace:
+            text = self.label.text()
+            self.label.setText(text[:len(text) - 1])
+        elif event.key() == QtCore.Qt.Key_Delete:
+            self.label.setText("")
+        elif event.key() == QtCore.Qt.Key_Enter:
+            equation = self.label.text()
+
+            try:
+                # getting the ans
+                ans = eval(equation)
+
+                # setting text to the label
+                self.label.setText(str(ans))
+
+            except Exception as e:
+                # self.msg_box(str(e))
+                self.label.setText(str(e))
+                # time.sleep(1)
+
+
 
     def action1(self): self.act("1")
     def action2(self): self.act("2")
@@ -88,14 +157,18 @@ class MainScreen(QMainWindow):
 
         try:
             # getting the ans
+            print(equation)
+            print("type:", type(equation))
             ans = eval(equation)
-
+            print(type(ans))
             # setting text to the label
             self.label.setText(str(ans))
+            # self.label.setPlaceholderText(str(ans))
 
-        except:
-            # setting text to the label
-            self.label.setText("Wrong Input")
+
+        except Exception as e:
+            self.label.setText(str(e))
+            # self.msg_box(str(e))
 
     def action_clear(self):
         # clearing the label text
@@ -106,10 +179,20 @@ class MainScreen(QMainWindow):
         text = self.label.text()
         self.label.setText(text[:len(text) - 1])
 
+    def msg_box(self, msg):
+
+        ms_box = QMessageBox(self)
+        ms_box.setText(msg)
+
+        ms_box.setStyleSheet("QMessageBox {background: #F2EBE9;} "
+                             "QPushButton { QPushButton {background: #063406; color:white; "
+                             "border-radius:4px;border: #27ae60 1px solid;}")
+        ms_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        ms_box.exec()
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     app.setStyle('breeze')
 
     obj = MainScreen()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())

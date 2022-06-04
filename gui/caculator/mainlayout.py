@@ -1,5 +1,6 @@
+from PyQt5 import QtCore
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel
+from PyQt5.QtWidgets import QWidget, QGridLayout, QPushButton, QLabel, QMessageBox
 from PyQt5.QtCore import Qt
 
 
@@ -109,6 +110,70 @@ class MainLayout(QWidget):
         self.gl.addWidget(self.btn_multiplay, 3, 3)
         self.gl.addWidget(self.btn_equals, 3, 4)
 
+    '''************************** keypress event ****************************************************'''
+
+    def keyPressEvent(self, event):
+
+        if event.key() == QtCore.Qt.Key_1:
+            text = self.label.text()
+            self.label.setText(text + "1")
+        elif event.key() == QtCore.Qt.Key_2:
+            text = self.label.text()
+            self.label.setText(text + "2")
+        elif event.key() == QtCore.Qt.Key_3:
+            text = self.label.text()
+            self.label.setText(text + "3")
+        elif event.key() == QtCore.Qt.Key_4:
+            text = self.label.text()
+            self.label.setText(text + "4")
+        elif event.key() == QtCore.Qt.Key_5:
+            text = self.label.text()
+            self.label.setText(text + "5")
+        elif event.key() == QtCore.Qt.Key_6:
+            text = self.label.text()
+            self.label.setText(text + "6")
+        elif event.key() == QtCore.Qt.Key_7:
+            text = self.label.text()
+            self.label.setText(text + "7")
+        elif event.key() == QtCore.Qt.Key_8:
+            text = self.label.text()
+            self.label.setText(text + "8")
+        elif event.key() == QtCore.Qt.Key_9:
+            text = self.label.text()
+            self.label.setText(text + "9")
+        elif event.key() == QtCore.Qt.Key_0:
+            text = self.label.text()
+            self.label.setText(text + "0")
+        elif event.key() == QtCore.Qt.Key_Plus:
+            text = self.label.text()
+            self.label.setText(text + "+")
+        elif event.key() == QtCore.Qt.Key_Minus:
+            text = self.label.text()
+            self.label.setText(text + "-")
+        elif event.key() == QtCore.Qt.Key_multiply:
+            text = self.label.text()
+            self.label.setText(text + "*")
+        elif event.key() == QtCore.Qt.Key_division:
+            text = self.label.text()
+            self.label.setText(text + "/")
+        elif event.key() == QtCore.Qt.Key_Period:
+            text = self.label.text()
+            self.label.setText(text + ".")
+        elif event.key() == QtCore.Qt.Key_Backspace:
+            text = self.label.text()
+            self.label.setText(text[:len(text) - 1])
+        elif event.key() == QtCore.Qt.Key_Delete:
+            self.label.setText("")
+        elif event.key() == QtCore.Qt.Key_Enter:
+            equation = self.label.text()
+            try:
+                ans = eval(equation)
+                self.label.setText(str(ans))
+            except Exception as e:
+                print("ex:", str(e))
+                # self.label.setText(str(e))
+                self.msg_box(str(e))
+
     '''  ************************     calculator functionality    *******************************    '''
 
     def action1(self):
@@ -165,9 +230,21 @@ class MainLayout(QWidget):
 
     def action_equals(self):
         text = self.label.text()
-
         try:
             ans = eval(text)
             self.label.setText(str(ans))
-        except:
-            self.label.setText("invalid input")
+        except Exception as e:
+            print("ex:", str(e))
+            self.msg_box(str(e))
+            self.label.setText(" ")
+
+    def msg_box(self, msg):
+
+        ms_box = QMessageBox(self)
+        ms_box.setText(msg)
+
+        ms_box.setStyleSheet("QMessageBox {background: #F2EBE9;} "
+                             "QPushButton { QPushButton {background: #063406; color:white; "
+                             "border-radius:4px;border: #27ae60 1px solid;}")
+        ms_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
+        ms_box.exec()
