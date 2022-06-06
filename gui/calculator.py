@@ -1,9 +1,9 @@
 import sys
 from PyQt5 import QtCore
-from PyQt5.QtGui import QFont, QRegExpValidator
+from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QPushButton, QGraphicsColorizeEffect, QLineEdit, \
     QMessageBox
-from PyQt5.QtCore import Qt, QRegExp
+from PyQt5.QtCore import Qt
 
 
 class MainScreen(QMainWindow):
@@ -13,8 +13,7 @@ class MainScreen(QMainWindow):
         self.setWindowTitle("Calculator")
         self.setGeometry(100, 100, 360, 350)
         self.setFont(QFont('ariel', 15))
-        # self.numbervalidator = QRegExpValidator(QRegExp(r'^[0-9]+$'))
-        # self.namevalidator = QRegExpValidator(QRegExp(r'^[a-zA-Z]+$'))
+
 
         self.uicomponents()
         self.show()
@@ -23,40 +22,37 @@ class MainScreen(QMainWindow):
 
         self.label = QLabel(self)
         self.label.setGeometry(5, 5, 350, 70)
-        # self.label.setWordWrap(True)
         self.label.setStyleSheet("QLabel"
                                  "{"
                                  "border : 4px solid grey;"
                                  "background : white;"
                                  "}")
         self.label.setAlignment(Qt.AlignRight)
-        # self.label.setReadOnly(True)
 
-        self.init("push1", self.action1, "1", 5, 150, 80, 40)
-        self.init("push2", self.action2, "2", 95, 150, 80, 40)
-        self.init("push3", self.action3, "3", 185, 150, 80, 40)
-        self.init("push4", self.action4, "4", 5, 200, 80, 40)
-        self.init("push5", self.action5, "5", 95, 200, 80, 40)
-        self.init("push6", self.action6, "6", 185, 200, 80, 40)
-        self.init("push7", self.action7, "7", 5, 250, 80, 40)
-        self.init("push8", self.action8, "8", 95, 250, 80, 40)
-        self.init("push9", self.action9, "9", 185, 250, 80, 40)
-        self.init("push0", self.action0, "0", 5, 300, 80, 40)
+        self.init(self.action1, "1", 5, 150, 80, 40)
+        self.init(self.action2, "2", 95, 150, 80, 40)
+        self.init(self.action3, "3", 185, 150, 80, 40)
+        self.init(self.action4, "4", 5, 200, 80, 40)
+        self.init(self.action5, "5", 95, 200, 80, 40)
+        self.init(self.action6, "6", 185, 200, 80, 40)
+        self.init(self.action7, "7", 5, 250, 80, 40)
+        self.init(self.action8, "8", 95, 250, 80, 40)
+        self.init(self.action9, "9", 185, 250, 80, 40)
+        self.init(self.action0, "0", 5, 300, 80, 40)
 
-        self.init("push_plus", self.action_plus, "+", 275, 250, 80, 40)
-        self.init("push_minus", self.action_minus, "-", 275, 200, 80, 40)
-        self.init("push_milti", self.action_multi, "*", 275, 150, 80, 40)
-        self.init("push_divi", self.action_divi, "/", 185, 300, 80, 40)
-        self.init("push_point", self.action_point, ".", 95, 300, 80, 40)
+        self.init(self.action_plus, "+", 275, 250, 80, 40)
+        self.init(self.action_minus, "-", 275, 200, 80, 40)
+        self.init(self.action_multi, "*", 275, 150, 80, 40)
+        self.init(self.action_divi, "/", 185, 300, 80, 40)
+        self.init(self.action_point, ".", 95, 300, 80, 40)
 
-        self.init("push_equal", self.action_equal, "=", 275, 300, 80, 40)
-        self.init("push_clear", self.action_clear, "clear", 5, 100, 200, 40)
-        self.init("push_del", self.action_del, "del", 210, 100, 145, 40)
+        self.init(self.action_equal, "=", 275, 300, 80, 40)
+        self.init(self.action_clear, "clear", 5, 100, 200, 40)
+        self.init(self.action_del, "del", 210, 100, 145, 40)
 
-    def init(self, btnname, actname, val, xval, yval, hval, wval):
+    def init(self, actname, val, xval, yval, hval, wval):
         btnname = QPushButton(val, self)
         btnname.setGeometry(xval, yval, hval, wval)
-        # btnname.setAutoRepeat(False)
         btnname.clicked.connect(actname)
 
 
@@ -115,16 +111,11 @@ class MainScreen(QMainWindow):
             equation = self.label.text()
 
             try:
-                # getting the ans
                 ans = eval(equation)
-
-                # setting text to the label
                 self.label.setText(str(ans))
 
             except Exception as e:
-                # self.msg_box(str(e))
                 self.label.setText(str(e))
-                # time.sleep(1)
 
 
 

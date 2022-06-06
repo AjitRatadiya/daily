@@ -1,14 +1,20 @@
+import base64
+import time
+
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QMessageBox, QPushButton
 import pymongo
 import mainlayout
 import register_layout
-from cryptography.fernet import Fernet
+
+# from Crypto.Cipher import AES
+# from Crypto.Util.Padding import pad, unpad
 
 class Login_class(QWidget):
     def __init__(self, view):
         super(Login_class, self).__init__()
 
         self._view = view
+        self.showMaximized()
         self.login_form()
 
 
@@ -17,11 +23,11 @@ class Login_class(QWidget):
 
         self.welcome_label = QLabel("Welcome", self)
         self.welcome_label.setStyleSheet("QLabel {font:46px; color:243A73}")
-        self.welcome_label.setGeometry(220, 50, 200, 100)
+        self.welcome_label.setGeometry(620, 50, 200, 100)
 
         self.info_label = QLabel("login to your account", self)
         self.info_label.setStyleSheet("QLabel {font:16px;color:243A73;}")
-        self.info_label.setGeometry(240, 90, 150, 100)
+        self.info_label.setGeometry(640, 90, 150, 100)
 
         '''***inputs***'''
 
@@ -29,14 +35,14 @@ class Login_class(QWidget):
         self.username.setPlaceholderText("username")
         self.username.setStyleSheet("QLineEdit{border-radius: 6px; font:16px; letter-spacing: 0.8px ;"
                                     "font-family: 'Rubik', sans-serif}")
-        self.username.setGeometry(210, 230, 180, 40)
+        self.username.setGeometry(570, 230, 280, 40)
 
         self.password = QLineEdit(self)
         self.password.setPlaceholderText("enter password")
         self.password.setEchoMode(QLineEdit.Password)
         self.password.setStyleSheet("QLineEdit{border-radius: 6px; font:16px; letter-spacing: 0.8px ;"
                                     "font-family: 'Rubik', sans-serif}")
-        self.password.setGeometry(210, 280, 180, 40)
+        self.password.setGeometry(570, 280, 280, 40)
 
         '''***buttons***'''
 
@@ -45,7 +51,7 @@ class Login_class(QWidget):
                                      "border-radius:4px;border: #27ae60 1px solid;}"
                                      "QPushButton::hover {background: black; color:white; "
                                      "border-radius:4px;border: #27ae60 1px solid;}")
-        self.btn_login.setGeometry(250, 330, 100, 40)
+        self.btn_login.setGeometry(650, 340, 140, 40)
         self.btn_login.clicked.connect(self.login_act)
 
         self.btn_register = QPushButton("register", self)
@@ -53,7 +59,7 @@ class Login_class(QWidget):
                                      "border-radius:4px;border: #27ae60 1px solid;}"
                                         "QPushButton::hover {background: black; color:white; "
                                      "border-radius:4px;border: #27ae60 1px solid;}")
-        self.btn_register.setGeometry(250, 380, 100, 40)
+        self.btn_register.setGeometry(650, 390, 140, 40)
         self.btn_register.clicked.connect(self.register_act)
 
 
@@ -67,28 +73,40 @@ class Login_class(QWidget):
         print(form_user)
         form_password = self.password.text()
         print(form_password)
+        print(type(form_password))
 
         '''******decoding passoword****'''
+        print("h1")
 
-        key= Fernet.generate_key()
-        f = Fernet(key)
-        encrypted_password_from_user = f.encrypt(bytes(form_password, 'utf-8'))
-        print(encrypted_password_from_user)
-
-
+        form_password = bytes(form_password, 'utf-8')
+        print("by password: ", form_password)
 
         '''**** checking user in database ***'''
 
-        isvalid_user = c.find_one({"username": form_user, "password": form_password})
+        isvalid_user = c.find_one({"username": form_user})
+
+        password = isvalid_user["password"]
+        expiry_time = isvalid_user["expiry"]
+        status = isvalid_user["status"]
+        print("ch db:", password)
+        decoded_password = base64.b64decode(password)
+        print("decoded pass:", decoded_password)
+        now_time = time.time()
+        print("now_time:", now_time)
+        print("expiry time:", expiry_time)
+        is_expired = now_time-expiry_time
+        print("is_expired:", is_expired)
+        print("status:", status)
         print(isvalid_user)
 
-        if isvalid_user == None:
+        if (decoded_password == form_password) and ((is_expired <= 86,400) and (status == True)):
+            print("logied")
+            self._view.setCentralWidget(mainlayout.MainLayout(self._view))
 
+        else:
             self.msg_box("invalid username or password")
             self.username.setPlaceholderText("username")
             self.password.setPlaceholderText("enter password")
-        else:
-            self._view.setCentralWidget(mainlayout.MainLayout(self._view))
 
     def register_act(self):
 
