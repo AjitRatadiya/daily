@@ -1,7 +1,9 @@
-from PyQt5.QtWidgets import QVBoxLayout, QLabel, QWidget, QTabWidget
+from PyQt5.QtGui import QPixmap
+from PyQt5.QtWidgets import QLabel, QWidget, QTabWidget, QPushButton
+from PyQt5.QtGui import QIcon
 
-from gui.app1.footer.footer import Footer
-from gui.app1.header.header import Header
+from gui.app1.login_layout import Login_class
+from gui.app1.tabs import tab1, tab2, tab3
 
 
 class Main_Layout(QWidget):
@@ -9,72 +11,34 @@ class Main_Layout(QWidget):
         super(Main_Layout, self).__init__()
 
         self._view = view
-        self.showMaximized()
-        self.Mlayout = QVBoxLayout(self)
+        self._view.setWindowTitle("Trade Manager")
 
+        self.label = QLabel("lbl", self)
+        self.label.setGeometry(20, 10, 250, 100)
+        self.pixmap = QPixmap('coretus.png')
+        self.label.setPixmap(self.pixmap)
 
-        # tab1
+        self.logout_btn = QPushButton("logout", self)
+        self.logout_btn.setGeometry(1250, 20, 70, 40)
+        self.logout_btn.setStyleSheet("QPushButton {background: #9F141A; color:white; "
+                                      "border-radius:4px;border: #27ae60 1px solid ;width:70px; height:40px;}"
+                                      "QPushButton::hover {background: black; color:white; "
 
-        self.tab1 = QWidget()
-        self.tab1_layout = QVBoxLayout(self)
-        self.label_1 = QLabel("tab 1 ", self)
-        self.tab1_layout.addWidget(self.label_1)
-        self.tab1.setLayout(self.tab1_layout)
+                                      "border-radius:4px;border: #27ae60 1px solid;}")
 
-        # tab2
-
-        self.tab2 = QWidget()
-        self.tab2_layout = QVBoxLayout(self)
-        self.label_2 = QLabel("tab 2 ", self)
-        self.tab2_layout.addWidget(self.label_2)
-        self.tab2.setLayout(self.tab2_layout)
-
-        # tab3
-
-        self.tab3 = QWidget()
-        self.tab3_layout = QVBoxLayout(self)
-        self.label_3 = QLabel("tab 3 ", self)
-        self.tab3_layout.addWidget(self.label_3)
-        self.tab3.setLayout(self.tab3_layout)
-
-        # tab4
-
-        self.tab4 = QWidget()
-        self.tab4_layout = QVBoxLayout(self)
-        self.label_4 = QLabel("tab 4 ", self)
-        self.tab4_layout.addWidget(self.label_1)
-        self.tab4.setLayout(self.tab4_layout)
-
-        # tab5
-
-        self.tab5 = QWidget()
-        self.tab5_layout = QVBoxLayout(self)
-        self.label_5 = QLabel("tab 5 ", self)
-        self.tab5_layout.addWidget(self.label_5)
-        self.tab5.setLayout(self.tab5_layout)
-
-        # tab6
-
-        self.tab6 = QWidget()
-        self.tab6_layout = QVBoxLayout(self)
-        self.label_6 = QLabel("tab 6 ", self)
-        self.tab6_layout.addWidget(self.label_6)
-        self.tab6.setLayout(self.tab6_layout)
-
-        # tabs 1 parent tab
+        print("h3")
+        self.logout_btn.clicked.connect(self.logout)
 
         self.tabs1 = QTabWidget(self)
-        self.tabs1.setFixedSize(1350, 500)
+        self.tabs1.setStyleSheet("QTabWidget ::Tab {weight:150px; width:150px; font:14px}")
+        self.tabs1.setGeometry(10, 100, 1350, 560)
 
-        self.tabs1.addTab(self.tab1, "tab1")
-        self.tabs1.addTab(self.tab2, "tab2")
-        self.tabs1.addTab(self.tab3, "tab3")
-        self.tabs1.addTab(self.tab4, "tab4")
-        self.tabs1.addTab(self.tab5, "tab5")
-        self.tabs1.addTab(self.tab6, "tab6")
+        self.tabs1.addTab(tab1.Tab1(),QIcon("first.png"),"tab1")
+        self.tabs1.addTab(tab2.Tab2(), "tab2")
+        self.tabs1.addTab(tab3.Tab3(), "tab3")
 
-        self.Mlayout.addWidget(Header(self._view))
-        self.Mlayout.addWidget(self.tabs1)
-        self.Mlayout.addWidget(Footer())
-        self.setLayout(self.Mlayout)
+
+    def logout(self):
+        self._view.setCentralWidget(Login_class(self._view))
+
 

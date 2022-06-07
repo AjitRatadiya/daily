@@ -1,8 +1,9 @@
 import sys
+from functools import partial
+
 from PyQt5 import QtCore
 from PyQt5.QtGui import QFont
-from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QPushButton, QGraphicsColorizeEffect, QLineEdit, \
-    QMessageBox
+from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QPushButton, QMessageBox
 from PyQt5.QtCore import Qt
 
 
@@ -13,14 +14,13 @@ class MainScreen(QMainWindow):
         self.setWindowTitle("Calculator")
         self.setGeometry(100, 100, 360, 350)
         self.setFont(QFont('ariel', 15))
-
+        self.label = QLabel(self)
 
         self.uicomponents()
         self.show()
 
     def uicomponents(self):
 
-        self.label = QLabel(self)
         self.label.setGeometry(5, 5, 350, 70)
         self.label.setStyleSheet("QLabel"
                                  "{"
@@ -29,32 +29,38 @@ class MainScreen(QMainWindow):
                                  "}")
         self.label.setAlignment(Qt.AlignRight)
 
-        self.init(self.action1, "1", 5, 150, 80, 40)
-        self.init(self.action2, "2", 95, 150, 80, 40)
-        self.init(self.action3, "3", 185, 150, 80, 40)
-        self.init(self.action4, "4", 5, 200, 80, 40)
-        self.init(self.action5, "5", 95, 200, 80, 40)
-        self.init(self.action6, "6", 185, 200, 80, 40)
-        self.init(self.action7, "7", 5, 250, 80, 40)
-        self.init(self.action8, "8", 95, 250, 80, 40)
-        self.init(self.action9, "9", 185, 250, 80, 40)
-        self.init(self.action0, "0", 5, 300, 80, 40)
+        self.init("1", 5, 150, 80, 40)
+        self.init("2", 95, 150, 80, 40)
+        self.init("3", 185, 150, 80, 40)
+        self.init("5", 95, 200, 80, 40)
+        self.init("4", 5, 200, 80, 40)
+        self.init("6", 185, 200, 80, 40)
+        self.init("7", 5, 250, 80, 40)
+        self.init("8", 95, 250, 80, 40)
+        self.init("9", 185, 250, 80, 40)
+        self.init("0", 5, 300, 80, 40)
 
-        self.init(self.action_plus, "+", 275, 250, 80, 40)
-        self.init(self.action_minus, "-", 275, 200, 80, 40)
-        self.init(self.action_multi, "*", 275, 150, 80, 40)
-        self.init(self.action_divi, "/", 185, 300, 80, 40)
-        self.init(self.action_point, ".", 95, 300, 80, 40)
+        self.init("+", 275, 250, 80, 40)
+        self.init("-", 275, 200, 80, 40)
+        self.init("*", 275, 150, 80, 40)
+        self.init("/", 185, 300, 80, 40)
+        self.init(".", 95, 300, 80, 40)
 
-        self.init(self.action_equal, "=", 275, 300, 80, 40)
-        self.init(self.action_clear, "clear", 5, 100, 200, 40)
-        self.init(self.action_del, "del", 210, 100, 145, 40)
+        self.init("=", 275, 300, 80, 40)
+        self.init("clear", 5, 100, 200, 40)
+        self.init("del", 210, 100, 145, 40)
 
-    def init(self, actname, val, xval, yval, hval, wval):
+    def init(self, val, xval, yval, hval, wval):
         btnname = QPushButton(val, self)
         btnname.setGeometry(xval, yval, hval, wval)
-        btnname.clicked.connect(actname)
-
+        if val == "=":
+            btnname.clicked.connect(self.action_equal)
+        elif val == "clear":
+            btnname.clicked.connect(self.action_clear)
+        elif val == "del":
+            btnname.clicked.connect(self.action_del)
+        else:
+            btnname.clicked.connect(partial(self.act, val))
 
     def keyPressEvent(self, event):
         if event.key() == QtCore.Qt.Key_1:
@@ -117,30 +123,9 @@ class MainScreen(QMainWindow):
             except Exception as e:
                 self.label.setText(str(e))
 
-
-
-    def action1(self): self.act("1")
-    def action2(self): self.act("2")
-    def action3(self): self.act("3")
-    def action4(self): self.act("4")
-    def action5(self): self.act("5")
-    def action6(self): self.act("6")
-    def action7(self): self.act("7")
-    def action8(self): self.act("8")
-    def action9(self): self.act("9")
-    def action0(self): self.act("0")
-
-    def action_plus(self): self.act("+")
-    def action_minus(self): self.act("-")
-    def action_multi(self): self.act("*")
-    def action_divi(self): self.act("/")
-    def action_point(self): self.act(".")
-
-
     def act(self, val):
         text = self.label.text()
         self.label.setText(text + val)
-
 
     def action_equal(self):
         # get the label text
@@ -155,7 +140,6 @@ class MainScreen(QMainWindow):
             # setting text to the label
             self.label.setText(str(ans))
             # self.label.setPlaceholderText(str(ans))
-
 
         except Exception as e:
             self.label.setText(str(e))
@@ -180,6 +164,7 @@ class MainScreen(QMainWindow):
                              "border-radius:4px;border: #27ae60 1px solid;}")
         ms_box.setStandardButtons(QMessageBox.Ok | QMessageBox.Cancel)
         ms_box.exec()
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
