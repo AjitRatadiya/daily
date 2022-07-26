@@ -12,7 +12,6 @@ class Register_class(QWidget):
         super(Register_class, self).__init__()
 
         self._view = view
-        self.showMaximized()
         self.register_form()
 
     def register_form(self):

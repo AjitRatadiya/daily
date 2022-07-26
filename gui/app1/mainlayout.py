@@ -23,7 +23,6 @@ class Main_Layout(QWidget):
         self.logout_btn.setStyleSheet("QPushButton {background: #9F141A; color:white; "
                                       "border-radius:4px;border: #27ae60 1px solid ;width:70px; height:40px;}"
                                       "QPushButton::hover {background: black; color:white; "
-
                                       "border-radius:4px;border: #27ae60 1px solid;}")
 
         print("h3")

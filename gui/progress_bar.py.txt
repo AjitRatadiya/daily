@@ -1,0 +1,129 @@
+import sys
+import time
+
+import pyautogui
+from PyQt5 import QtCore, QtWidgets
+from PyQt5.QtCore import QSize, QRect, Qt
+from PyQt5.QtGui import QPainter, QPen, QColor, QFont
+from PyQt5.QtWidgets import QMainWindow, QLabel, QGridLayout, QWidget
+
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        QMainWindow.__init__(self)
+        Progress = 10
+        LoadWin = LoadWindow()
+        LoadWin.from_mode = 'LIVE'
+        LoadWin.to_mode = "PAPER"
+        LoadWin.show()
+        app.processEvents()
+
+        LoadWin.set_value(Progress)
+        time.sleep(0.5)
+        self.setMinimumSize(QSize(640, 480))
+        self.setWindowTitle("Main Window")
+
+        centralWidget = QWidget(self)
+        self.setCentralWidget(centralWidget)
+        Progress = 30
+        LoadWin.set_value(Progress)
+        time.sleep(0.5)
+
+        gridLayout = QGridLayout(self)
+        centralWidget.setLayout(gridLayout)
+        Progress = 50
+        LoadWin.set_value(Progress)
+        time.sleep(0.5)
+
+        title = QLabel("I am the main window", self)
+        title.setAlignment(QtCore.Qt.AlignCenter)
+        gridLayout.addWidget(title, 0, 0)
+
+        Progress = 100
+        LoadWin.set_value(Progress)
+        self.show()
+        LoadWin.close()
+
+
+class LoadWindow(QWidget):
+
+    def __init__(self):
+        QWidget.__init__(self)
+        self.setWindowFlag(Qt.FramelessWindowHint)
+        self.setAttribute(Qt.WA_TranslucentBackground)
+        width, height = pyautogui.size()
+        self.setGeometry(400, 250, width - 800, height - 500)
+        self.value = 0
+        self.width = 300
+        self.height = 300
+        self.progress_width = 10
+        self.rounded_cap = True
+        self.progress_color = 0x498BD1
+        self.max_value = 100
+        self.font_family = 'segoe UI'
+        self.font_size = 12
+        self.text_color = 0x498BD1
+        self.enable_shadow = True
+        self.from_mode = None
+        self.to_mode = None
+        self.resize(self.width, self.height)
+
+    def set_value(self, value):
+        self.value = value
+        self.repaint()
+
+    def paintEvent(self, e):
+        # progress parameter
+        width = self.width - self.progress_width
+        height = self.height - self.progress_width
+        margin = self.progress_width / 2
+        value = self.value * 360 / self.max_value
+
+        #  painter
+        painter = QPainter()
+        painter.begin(self)
+        painter.setRenderHint(QPainter.Antialiasing)
+        painter.setFont(QFont(self.font_family, self.font_size))
+
+        # create rectangle
+        rect = QRect(0, 0, self.width, self.height)
+        painter.setPen(Qt.NoPen)
+        painter.drawRect(rect)
+
+        # pen
+        pen = QPen()
+        pen.setColor(QColor(self.progress_color))
+        pen.setWidth(self.progress_width)
+        # setrounde cap
+        if self.rounded_cap:
+            pen.setCapStyle(Qt.RoundCap)
+
+        # create circular progress
+        painter.setPen(pen)
+        painter.drawArc(int(margin), int(margin), int(width), int(height), int(-90 * 16), int(-value * 16))
+
+        # create text
+        pen.setColor(QColor(self.text_color))
+        painter.setPen(pen)
+        painter.drawText(rect, Qt.AlignCenter, f"changing mode from {self.from_mode} to {self.to_mode}")
+
+    #     width, height = pyautogui.size()
+    #
+    #     width, height = pyautogui.size()
+    #     self.setWindowFlag(Qt.FramelessWindowHint)
+    #     self.setAttribute(Qt.WA_TranslucentBackground)
+    #     self.setGeometry(400, 250, width - 800, height - 500)
+    #
+    #     self.pbar = QProgressBar(self)
+    #     self.pbar.setGeometry(50, 50, 300, 50)
+    #
+    #     self.show()
+    #
+    # def progressUpdate(self, progress):
+    #     self.pbar.setValue(progress)
+
+
+if __name__ == "__main__":
+    app = QtWidgets.QApplication(sys.argv)
+    MainWin = MainWindow()
+    sys.exit(app.exec_())

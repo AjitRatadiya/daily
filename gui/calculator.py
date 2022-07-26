@@ -1,6 +1,6 @@
 import sys
 from functools import partial
-
+import pyautogui
 from PyQt5 import QtCore
 from PyQt5.QtGui import QFont
 from PyQt5.QtWidgets import QMainWindow, QApplication, QLabel, QPushButton, QMessageBox
@@ -12,7 +12,10 @@ class MainScreen(QMainWindow):
         super(MainScreen, self).__init__()
 
         self.setWindowTitle("Calculator")
-        self.setGeometry(100, 100, 360, 350)
+        w, h = pyautogui.size()
+        print("width:", w)
+        print("height:", h)
+        self.setGeometry(100, 100, w, h)
         self.setFont(QFont('ariel', 15))
         self.label = QLabel(self)
 

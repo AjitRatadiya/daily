@@ -1,6 +1,7 @@
 import base64
 import time
 
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import QWidget, QLabel, QLineEdit, QMessageBox, QPushButton
 import pymongo
 import mainlayout
@@ -13,6 +14,7 @@ class Login_class(QWidget):
 
         self._view = view
         self.login_form()
+
 
     def login_form(self):
         '''***label***'''
@@ -43,6 +45,7 @@ class Login_class(QWidget):
         '''***buttons***'''
 
         self.btn_login = QPushButton("Login", self)
+        self.btn_login.setObjectName("login")
         self.btn_login.setStyleSheet("QPushButton {background: #9F141A; color:white; "
                                      "border-radius:4px;border: #27ae60 1px solid;}"
                                      "QPushButton::hover {background: black; color:white; "
@@ -52,11 +55,18 @@ class Login_class(QWidget):
 
         self.btn_register = QPushButton("register", self)
         self.btn_register.setStyleSheet("QPushButton {background: #063406; color:white; "
-                                        "border-radius:4px;border: #27ae60 1px solid;}"
+                                     "border-radius:4px;border: #27ae60 1px solid;}"
                                         "QPushButton::hover {background: black; color:white; "
-                                        "border-radius:4px;border: #27ae60 1px solid;}")
+                                     "border-radius:4px;border: #27ae60 1px solid;}")
         self.btn_register.setGeometry(650, 390, 140, 40)
         self.btn_register.clicked.connect(self.register_act)
+
+    def keyPressEvent(self, event):
+        if event.key() == QtCore.Qt.Key_Enter:
+            obj = self.focusWidget()
+            print(obj)
+        # elif event.key() == QtCore.Qt.Key_Enter:
+        #     pass
 
     def login_act(self):
         db = pymongo.MongoClient("mongodb://localhost:27017")
@@ -89,12 +99,12 @@ class Login_class(QWidget):
         now_time = time.time()
         print("now_time:", now_time)
         print("expiry time:", expiry_time)
-        is_expired = now_time - expiry_time
+        is_expired = now_time-expiry_time
         print("is_expired:", is_expired)
         print("status:", status)
         print(isvalid_user)
 
-        if (decoded_password == form_password) and ((is_expired <= 86, 400) and (status == True)):
+        if (decoded_password == form_password) and ((is_expired <= 86,400) and (status == True)):
             print("logied")
             self._view.setCentralWidget(mainlayout.Main_Layout(self._view))
 

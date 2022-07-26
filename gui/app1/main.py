@@ -6,4 +6,5 @@ if __name__ == '__main__':
 
     obj = MainScreen()
 
+    app.setStyle('fusion')
     sys.exit(app.exec())

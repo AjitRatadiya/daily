@@ -1,6 +1,5 @@
 from PyQt5 import QtCore
 from PyQt5.QtWidgets import QWidget, QTabWidget, QTabBar, QStylePainter, QStyleOptionTab, QStyle
-from PyQt5.QtGui import QIcon
 
 from gui.app1.tabs import tab1, tab2
 

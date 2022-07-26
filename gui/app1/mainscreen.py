@@ -1,5 +1,4 @@
 from PyQt5.QtWidgets import QMainWindow
-import mainlayout
 import login_layout
 from PyQt5.QtGui import QIcon
 
@@ -7,6 +6,7 @@ from PyQt5.QtGui import QIcon
 class MainScreen(QMainWindow):
     def __init__(self):
         super(MainScreen, self).__init__()
+
         self.setWindowTitle("welcome")
         self.setStyleSheet("QMainWindow {background: #F2EBE9;}")
         self.setWindowIcon(QIcon("static/logo.png"))
@@ -25,4 +25,6 @@ class MainScreen(QMainWindow):
                   ''')
         self.statusBar().setStyleSheet("background : gray; height:30px; ")
         self.showMaximized()
+        # self.setStyleSheet("QMainWindow { height:100%; width:100%; }")
+        # self.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
         self.show()

@@ -1,0 +1,71 @@
+import pyautogui
+from PyQt5.QtWidgets import QCompleter
+
+from src.config.config import GlobalVariable as GV
+
+
+class FilterDesign:
+
+    @staticmethod
+    def setfilterui(variables, layout, collection):
+        width, height = pyautogui.size()
+        for a in variables.values():
+            a.setFixedSize(width - 0.95 * width, height - 0.98 * height)
+            layout.addWidget(a)
+        if 'submit' in variables:
+            variables['submit'].setStyleSheet("QPushButton{background-color: rgb(30,144,255); color: white}")
+        if 'reset' in variables:
+            variables['reset'].setStyleSheet("QPushButton{background-color: rgb(30,144,255); color: white}")
+        if 'export' in variables:
+            variables['export'].setStyleSheet("QPushButton{background-color: rgb(30,144,255); color: white}")
+        dropdown_list = []
+        dropdown_value_list = []
+        if 'broker' in variables:
+            broker_list = GV.MongoDB.findAll('broker_details', ['ALL', 'broker'])
+            if broker_list:
+                broker_list = broker_list
+            else:
+                broker_list = ["ALL", "Angel Broking", "Grow"]
+            dropdown_list.append('broker')
+            dropdown_value_list.append(broker_list)
+        if 'strategy' in variables:
+            dropdown_list.append('strategy')
+            dropdown_value_list.append(FilterDesign.get_data(collection, ['ALL', 'ordertag']))
+        if 'date' in variables:
+            dropdown_list.append('date')
+            dropdown_value_list.append(
+                ['Today', 'Yesterday', 'This Week', 'Last Week', 'This Month', 'Custom Range', 'ALL'])
+
+        if 'status' in variables:
+            dropdown_list.append('status')
+            dropdown_value_list.append(['ALL', 'COMPLETE', 'PENDING', 'REJECTED'])
+
+        if 'action' in variables:
+            dropdown_list.append('action')
+            dropdown_value_list.append(['ALL', 'BUY', 'SELL'])
+
+        for a, b in zip(dropdown_list, dropdown_value_list):
+            variables[a].addItems(b)
+
+        if 'client' in variables:
+            variables['client'].setCompleter(QCompleter(FilterDesign.get_data(collection, ['client_id'])))
+        if 'symbol' in variables:
+            variables['symbol'].setCompleter(QCompleter(FilterDesign.get_data(collection, ['tradingsymbol'])))
+        if 'expiry_date' in variables:
+            variables['expiry_date'].setCompleter(QCompleter(FilterDesign.get_data(collection, ['expirydate'])))
+
+    @staticmethod
+    def get_data(collection, value_filter):
+        try:
+            return GV.MongoDB.findAll(collection_name=collection, value_filter=value_filter, unique=True,
+                                      find_filter={'admin_id': GV.EMAIL})
+        except Exception as e:
+            print("views core view filterdesign get_data error:", e)
+
+    @staticmethod
+    def submit_fun():
+        pass
+
+    @staticmethod
+    def reset_fun():
+        pass
