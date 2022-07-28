@@ -1,0 +1,4 @@
+1-pip install virtualenv
+2-virtualenv <name> -name of the virtual environment
+3-<name>\Scripts\activate - path of the virtual environment
+4-deactivate

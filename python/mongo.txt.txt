@@ -1,0 +1,18 @@
+mydb=pymongo.MongoClient("mongodb://127.0.0.1:27017/")
+db=mydb["emp"]
+c=db.collection
+c.find_one({'key':val})	 #find({})- TO Show all data
+c.insert_one(d)  	 #insert_many()
+
+c.update_one({"firstname":"parsotam"},            #update_many()
+             {"$set":{"lastname":"prabhari"}})
+
+c.replace_one({"firstname":"parsotam"}#filter,
+              {"firstname":"sprin","lastname":"boot","age":17}# replacement)
+
+c.delete_one({"firstname":"mahabali"})
+c.delete_many({})
+
+
+
+# db=pymongo.MongoClient("mongodb+srv://dbfirst:12345@first.uso7i.mongodb.net/test") #for atlas

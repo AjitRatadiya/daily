@@ -1,0 +1,35 @@
+Series(data,index_col=[])
+DataFrame(data,index_row=[],column_name=[], dtype=datatype)
+obj=read_csv(filepath,
+nrows="specifie no of rows to show",
+skiprow="index of columns to skip ",
+headers="specifiy index to make header",
+index="",
+prefix="adding value to the header columns name",
+na_values=["",""]or {"specific column":"value"},
+)
+
+params:
+
+data = it can be list, dic, list of dics, csv, exel file
+index_col = naming the rows
+column_name = naming the column
+
+functions:
+
+obj.groupby()
+obj.merge(df1,df2,on="field",how="right,left,inner,outer",indicater=True)
+obj.pivot_table(index="field",columns="field" ,aggfunc="count or min or max etc", fill_values="value ti be filled" )
+onj.concate([df1,df2],ignore_indef=Bool,keys=["key1", "key2"])
+dataframe.join(dataframe,how="right,left,inner,outer")
+
+obj.head(no)-show data from top
+obj.tail(no)-show data from bottom
+
+obj.interpolate()-it will fill the missing values
+obj.fillna(value) or ({"column":"value:,"col":"val"}) or (method="ffill or bfill)- it will the nan with specified value
+obj.replace(to_replace="value to replace",value="value to be replaced") or
+	(['val1','val2],1) or 
+	({"fieldname":"value to rep","f":"rp"},value to be replaced) or 
+	(to_replace,method="ffill or bfill", limit=int(limit the times to replace))
+

@@ -1,0 +1,18 @@
+from threading import Thread,Lock
+
+def fun_name(ar1,lock):
+	lock.acquire()- it will lock the resouces thread
+	#something
+	lock.release()-it will release the resources thread
+
+lock = Lock()- creating obj of Lock()
+
+t = Thread(target=fun_name, args = (ar1,lock ), deamon=Boolvalue, name="") 
+						-"target" can be function 
+						-"args" it will take arguments for function
+						-"name" take the name of thread
+					    	-"deamon" it takes True or False for creating the function a Deamon function,
+					    	- A Deamon function terminated it execution as main function is terminated
+t.is_alive() - this method will return True is the Thread is still running
+t.join() - this method will wait to function to complete its execution
+t.setDeamon(True)-to make a function deamon
