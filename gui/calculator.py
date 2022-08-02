@@ -13,9 +13,8 @@ class MainScreen(QMainWindow):
 
         self.setWindowTitle("Calculator")
         w, h = pyautogui.size()
-        print("width:", w)
-        print("height:", h)
-        self.setGeometry(100, 100, w, h)
+
+        self.setGeometry(int(w/2), int(h/2), int(w-w/1.5), int(w-w/1.5))
         self.setFont(QFont('ariel', 15))
         self.label = QLabel(self)
 
